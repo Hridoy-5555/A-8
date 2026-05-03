@@ -53,16 +53,22 @@ export default function AllCoursesPage() {
           </p>
         </div>
         
-        <div className="w-full md:w-96">
+        <motion.div 
+          className="w-full md:w-96"
+          whileFocus={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <Input
-            placeholder="Search title or category..."
+            placeholder="What do you want to learn?"
             variant="bordered"
             size="lg"
             startContent={<Search className="text-default-400" size={20} />}
             value={searchQuery}
             onValueChange={setSearchQuery}
+            isClearable
+            onClear={() => setSearchQuery("")}
           />
-        </div>
+        </motion.div>
       </motion.div>
 
       <motion.div
