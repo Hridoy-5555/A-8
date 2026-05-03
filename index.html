@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSphere | Upgrade Your Skills Today</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(90deg, #2563eb 0%, #4338ca 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        .view-hidden {
+            display: none;
+        }
+        [data-lucide] { vertical-align: middle; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <button onclick="showView('home')" class="text-2xl font-bold text-blue-600">SkillSphere</button>
+                <div class="hidden md:flex gap-6 text-gray-600 font-medium">
+                    <button onclick="showView('home')" class="hover:text-blue-600">Home</button>
+                    <button onclick="showView('courses')" class="hover:text-blue-600">Courses</button>
+                    <button id="nav-profile-link" onclick="showView('profile')" class="hover:text-blue-600 hidden">My Profile</button>
+                </div>
+            </div>
+            <div id="auth-section" class="flex items-center gap-2 md:gap-4">
+                <!-- Search Toggle Button -->
+                <button id="search-toggle" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="search"></i>
+                </button>
+
+                <!-- Logged Out State -->
+                <div id="logged-out" class="hidden md:flex items-center gap-4">
+                    <button onclick="showView('login')" class="text-gray-600 font-medium px-4 py-2 hover:text-blue-600">Login</button>
+                    <button onclick="showView('register')" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700">Register</button>
+                </div>
+                
+                <!-- Logged In State (Hidden by default) -->
+                <div id="logged-in" class="hidden md:flex items-center gap-4">
+                    <button onclick="showView('profile')" class="w-10 h-10 rounded-full border-2 border-blue-600 overflow-hidden shadow-sm">
+                        <img id="user-avatar-nav" src="https://i.pravatar.cc/150?u=user" onerror="this.src='https://ui-avatars.com/api/?name=User'" class="w-full h-full object-cover" alt="User Avatar">
+                    </button>
+                    <button onclick="mockLogout()" class="text-red-600 bg-red-50 px-4 py-2 rounded-lg font-medium hover:bg-red-100">Log Out</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-toggle" class="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Overlay System -->
+    <div id="search-overlay" class="fixed inset-0 z-[70] pointer-events-none">
+        <!-- Backdrop -->
+        <div id="search-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+        
+        <!-- Search Panel (Slide down from top) -->
+        <div id="search-panel" class="absolute top-0 left-0 w-full bg-white shadow-2xl transform -translate-y-full transition-transform duration-300 ease-in-out">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4">
+                <div class="flex-grow relative">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size="20"></i>
+                    <input type="text" placeholder="Search for courses, instructors..." 
+                        class="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-lg">
+                </div>
+                <button id="search-close" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay System -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-[60] md:hidden pointer-events-none">
+        <!-- Backdrop (Dark background) -->
+        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+        
+        <!-- Side Panel -->
+        <div id="mobile-menu-panel" class="absolute top-0 right-0 h-full w-72 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+            <div class="p-4 flex justify-end border-b">
+                <button id="mobile-menu-close" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4 flex-grow">
+                <!-- Search Bar inside Mobile Menu Panel (Slides with menu) -->
+                <div class="relative mb-6">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size="18"></i>
+                    <input type="text" placeholder="Quick search..." 
+                        class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm">
+                </div>
+
+                <button onclick="showView('home'); closeMenu()" class="block text-lg font-semibold text-gray-700 hover:text-blue-600 text-left">Home</button>
+                <button onclick="showView('courses'); closeMenu()" class="block text-lg font-semibold text-gray-700 hover:text-blue-600 text-left">Courses</button>
+                <button onclick="showView('profile'); closeMenu()" class="block text-lg font-semibold text-gray-700 hover:text-blue-600 text-left">My Profile</button>
+                <div class="pt-6 border-t border-gray-100 flex flex-col gap-3">
+                    <button onclick="showView('login'); closeMenu()" class="text-gray-600 font-bold py-3 text-left">Login</button>
+                    <button onclick="showView('register'); closeMenu()" class="bg-blue-600 text-white px-5 py-3 rounded-xl font-bold w-full shadow-md">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-grow">
+        <!-- HOME VIEW -->
+        <div id="view-home">
+            <!-- Hero Section -->
+            <section class="hero-gradient text-white py-24 text-center">
+                <div class="max-w-4xl mx-auto px-4">
+                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6">Upgrade Your Skills Today 🚀</h1>
+                    <p class="text-xl opacity-90 mb-10">Learn from Industry Experts and take your career to the next level with our world-class courses.</p>
+                    <button onclick="showView('courses')" class="bg-white text-blue-700 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-gray-100 transition-colors">
+                        Explore Courses
+                    </button>
+                </div>
+            </section>
+
+            <!-- Popular Courses Section -->
+            <section class="max-w-7xl mx-auto px-4 py-20">
+                <h2 class="text-3xl font-bold mb-10 flex items-center gap-2">
+                    <i data-lucide="flame" class="text-orange-500"></i> Popular Courses
+                </h2>
+                <div id="popular-courses-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Dynamically populated -->
+                </div>
+            </section>
+
+            <!-- Extra: Trending Courses -->
+            <section class="bg-blue-50 py-20">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <h2 class="text-3xl font-bold mb-4">✨ Trending Releases</h2>
+                    <p class="text-gray-600 mb-12">The latest and most in-demand skills currently trending.</p>
+                    <div id="trending-grid" class="flex flex-wrap justify-center gap-6">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Learning Tips Section -->
+            <section class="max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">📌 Expert Learning Tips</h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</div>
+                            <p class="text-gray-700"><strong>Time Management:</strong> Set specific hours for learning daily to build a consistent habit and avoid burnout.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</div>
+                            <p class="text-gray-700"><strong>Practical Projects:</strong> Always apply what you learn by building real-world projects immediately after lessons.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</div>
+                            <p class="text-gray-700"><strong>Take Notes:</strong> Summarize key concepts in your own words to improve long-term retention.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-indigo-600 rounded-3xl p-12 text-white shadow-2xl">
+                    <i data-lucide="quote" class="mb-4 opacity-50"></i>
+                    <p class="text-2xl italic font-light leading-relaxed">"The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice."</p>
+                    <p class="mt-6 font-bold">— Brian Herbert</p>
+                </div>
+            </section>
+
+            <!-- Top Instructors Section -->
+            <section class="bg-gray-100 py-20">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-3xl font-bold mb-12 text-center">🏆 Meet Our Top Instructors</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                        <div class="w-24 h-24 bg-blue-200 rounded-full mx-auto mb-4 overflow-hidden"><img src="https://i.pravatar.cc/150?u=john" onerror="this.src='https://ui-avatars.com/api/?name=John+Doe'" class="w-full h-full object-cover" alt="John Doe"></div>
+                            <h3 class="font-bold">John Doe</h3>
+                            <p class="text-blue-600 text-sm">Web Development</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                        <div class="w-24 h-24 bg-pink-200 rounded-full mx-auto mb-4 overflow-hidden"><img src="https://i.pravatar.cc/150?u=jane" onerror="this.src='https://ui-avatars.com/api/?name=Jane+Smith'" class="w-full h-full object-cover" alt="Jane Smith"></div>
+                            <h3 class="font-bold">Jane Smith</h3>
+                            <p class="text-pink-600 text-sm">UI/UX Design</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                        <div class="w-24 h-24 bg-green-200 rounded-full mx-auto mb-4 overflow-hidden"><img src="https://i.pravatar.cc/150?u=sarah" onerror="this.src='https://ui-avatars.com/api/?name=Sarah+Chen'" class="w-full h-full object-cover" alt="Dr. Sarah Chen"></div>
+                            <h3 class="font-bold">Dr. Sarah Chen</h3>
+                            <p class="text-green-600 text-sm">Data Science</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                        <div class="w-24 h-24 bg-purple-200 rounded-full mx-auto mb-4 overflow-hidden"><img src="https://i.pravatar.cc/150?u=alex" onerror="this.src='https://ui-avatars.com/api/?name=Alex+Rivera'" class="w-full h-full object-cover" alt="Alex Rivera"></div>
+                            <h3 class="font-bold">Alex Rivera</h3>
+                            <p class="text-purple-600 text-sm">App Development</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ALL COURSES VIEW -->
+        <div id="view-courses" class="view-hidden max-w-7xl mx-auto px-4 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                <div>
+                    <h1 class="text-4xl font-bold">All Courses</h1>
+                    <p class="text-gray-500">Explore our professional learning programs.</p>
+                </div>
+                <div class="relative w-full md:w-96">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size="18"></i>
+                    <input type="text" id="course-search" oninput="filterCourses()" placeholder="Search courses by title..." 
+                        class="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none">
+                </div>
+            </div>
+            <div id="all-courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="view-profile" class="view-hidden max-w-4xl mx-auto px-4 py-20">
+            <div id="profile-card" class="bg-white rounded-3xl p-10 shadow-xl border border-gray-100 text-center">
+                <img id="profile-img" src="" class="w-32 h-32 rounded-full border-4 border-blue-600 mx-auto mb-6 object-cover shadow-lg">
+                <h2 id="profile-name" class="text-3xl font-bold mb-2"></h2>
+                <p id="profile-email" class="text-gray-500 mb-8"></p>
+                <button onclick="showProfileUpdate(true)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all">
+                    Update Information
+                </button>
+            </div>
+
+            <!-- Update Form (Challenge 3) -->
+            <div id="profile-update-form" class="view-hidden bg-white rounded-3xl p-10 shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-bold mb-6">Update Profile</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="update-name" class="w-full p-4 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Image URL</label>
+                        <input type="text" id="update-image" class="w-full p-4 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none">
+                    </div>
+                    <div class="flex gap-4 pt-4">
+                        <button onclick="saveProfile()" class="flex-grow bg-blue-600 text-white py-4 rounded-xl font-bold">Update Information</button>
+                        <button onclick="showProfileUpdate(false)" class="px-8 bg-gray-100 text-gray-600 py-4 rounded-xl font-bold">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COURSE DETAILS VIEW -->
+        <div id="view-course-details" class="view-hidden max-w-7xl mx-auto px-4 py-12">
+            <div id="course-details-content" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- LOGIN VIEW -->
+        <div id="view-login" class="view-hidden max-w-md mx-auto px-4 py-20">
+            <div class="bg-white rounded-3xl p-10 shadow-xl border border-gray-100">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-blue-600">Welcome Back</h1>
+                    <p class="text-gray-500">Sign in to your SkillSphere account</p>
+                </div>
+                <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
+                        <input type="email" required class="w-full p-4 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none" placeholder="name@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Password</label>
+                        <input type="password" required class="w-full p-4 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none" placeholder="••••••••">
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center gap-2 text-gray-600 cursor-pointer">
+                            <input type="checkbox" class="rounded text-blue-600"> Remember me
+                        </label>
+                        <button type="button" class="text-blue-600 font-semibold hover:underline">Forgot Password?</button>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all mt-4">
+                        Sign In
+                    </button>
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="flex-grow border-t border-gray-200"></div>
+                        <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase">Or</span>
+                        <div class="flex-grow border-t border-gray-200"></div>
+                    </div>
+                    <button type="button" onclick="mockLogin()" class="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-gray-50">
+                         Sign in with Google
+                    </button>
+                    <p class="text-center text-sm text-gray-500 mt-6">
+                        Don't have an account? <button type="button" onclick="showView('register')" class="text-blue-600 font-bold hover:underline">Register</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <!-- REGISTER VIEW (Simple Placeholder) -->
+        <div id="view-register" class="view-hidden max-w-md mx-auto px-4 py-20 text-center">
+            <div class="bg-white rounded-3xl p-10 shadow-xl border border-gray-100">
+                <h1 class="text-3xl font-bold text-blue-600 mb-4">Join SkillSphere</h1>
+                <p class="text-gray-500 mb-8">Start your learning journey today.</p>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Full Name" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
+                    <input type="email" placeholder="Email Address" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
+                    <input type="text" placeholder="Photo URL (link)" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
+                    <input type="password" placeholder="Password" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
+                    <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg">
+                        Create Account
+                    </button>
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="flex-grow border-t border-gray-200"></div>
+                        <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase">Or</span>
+                        <div class="flex-grow border-t border-gray-200"></div>
+                    </div>
+                    <button type="button" onclick="mockLogin()" class="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-gray-50">
+                         Sign up with Google
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-6">
+                    Already have an account? 
+                    <button onclick="showView('login')" class="text-blue-600 font-bold hover:underline">Log In</button>
+                </p>
+            </div>
+        </div>
+
+        <!-- LOADER -->
+        <div id="view-loader" class="view-hidden h-[60vh] flex items-center justify-center flex-col gap-4">
+            <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-blue-600 font-bold">Loading SkillSphere...</p>
+        </div>
+
+        <!-- ERROR / NOT FOUND -->
+        <div id="view-not-found" class="view-hidden h-[60vh] flex flex-col items-center justify-center text-center px-4">
+            <h1 class="text-9xl font-bold text-blue-600">404</h1>
+            <p class="text-2xl font-bold mt-4">Page Not Found</p>
+            <button onclick="showView('home')" class="mt-8 text-blue-600 font-bold">Back to Home</button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-1">
+                <h3 class="text-xl font-bold text-blue-600 mb-4">SkillSphere</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Empowering learners worldwide with industry-leading courses and expert instructors to achieve their professional goals.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Contact Info</h4>
+                <div class="space-y-3 text-sm text-gray-600">
+                    <p class="flex items-center gap-2"><i data-lucide="mail" size="16"></i> support@skillsphere.com</p>
+                    <p class="flex items-center gap-2"><i data-lucide="phone" size="16"></i> +1 (555) 000-1234</p>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Follow Us</h4>
+                <div class="flex gap-4">
+                    <a href="#" class="text-gray-400 hover:text-blue-600"><i data-lucide="facebook"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-blue-700"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-pink-600"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-black"><i data-lucide="github"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:text-blue-600">Terms & Conditions</a></li>
+                    <li><a href="#" class="hover:text-blue-600">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-gray-100 text-center text-gray-400 text-sm">
+            &copy; <span id="year"></span> SkillSphere. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        // --- GLOBAL STATE ---
+        let user = {
+            isLoggedIn: false,
+            name: "John Pro Student",
+            email: "student@skillsphere.com",
+            image: "https://i.pravatar.cc/150?u=user"
+        };
+
+        const courses = [
+            {
+                "id": 1,
+                "title": "Complete Web Development Bootcamp",
+                "instructor": "John Doe",
+                "duration": "20 hours",
+                "rating": 4.8,
+                "level": "Beginner",
+                "description": "Learn full-stack web development from scratch.",
+                "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+                "category": "Development"
+            },
+            {
+                "id": 2,
+                "title": "Advanced UI/UX Design Masterclass",
+                "instructor": "Jane Smith",
+                "duration": "15 hours",
+                "rating": 4.9,
+                "level": "Intermediate",
+                "description": "Master Figma and user psychology to create stunning interfaces.",
+                "image": "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?auto=format&fit=crop&w=800&q=80",
+                "category": "Design"
+            },
+            {
+                "id": 3,
+                "title": "Digital Marketing Strategy 2024",
+                "instructor": "Mike Wilson",
+                "duration": "12 hours",
+                "rating": 4.7,
+                "level": "Beginner",
+                "description": "Grow your business with SEO, SEM, and social media marketing.",
+                "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+                "category": "Marketing"
+            },
+            {
+                "id": 4,
+                "title": "Data Science with Python",
+                "instructor": "Dr. Sarah Chen",
+                "duration": "30 hours",
+                "rating": 4.9,
+                "level": "Advanced",
+                "description": "Deep dive into machine learning and statistical analysis.",
+                "image": "https://images.unsplash.com/photo-1551288049-bbbda536ad0a?auto=format&fit=crop&w=800&q=80",
+                "category": "Data Science"
+            },
+            {
+                "id": 5,
+                "title": "Mobile App Development (Flutter)",
+                "instructor": "Alex Rivera",
+                "duration": "25 hours",
+                "rating": 4.6,
+                "level": "Intermediate",
+                "description": "Build cross-platform mobile apps for iOS and Android.",
+                "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+                "category": "Development"
+            },
+            {
+                "id": 6,
+                "title": "Cybersecurity Fundamentals",
+                "instructor": "Robert Black",
+                "duration": "18 hours",
+                "rating": 4.8,
+                "level": "Beginner",
+                "description": "Protect systems and networks from digital attacks.",
+                "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+                "category": "IT & Software"
+            }
+        ];
+
+        // --- ROUTING / VIEW LOGIC ---
+        function showView(viewName) {
+            const views = ['home', 'courses', 'profile', 'loader', 'not-found', 'login', 'register', 'course-details'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('view-hidden');
+            });
+
+            // Show Loader first to simulate fetching
+            document.getElementById('view-loader').classList.remove('view-hidden');
+            
+            setTimeout(() => {
+                document.getElementById('view-loader').classList.add('view-hidden');
+                const target = document.getElementById(`view-${viewName}`);
+                if (target) {
+                    target.classList.remove('view-hidden');
+                    if (viewName === 'courses') renderAllCourses();
+                    if (viewName === 'profile') renderProfile();
+                } else {
+                    document.getElementById('view-not-found').classList.remove('view-hidden');
+                }
+                window.scrollTo(0, 0);
+            }, 400);
+        }
+
+        // --- AUTH LOGIC ---
+        let pendingCourseId = null;
+
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            mockLogin();
+        }
+
+        function handleRegisterSubmit() {
+            // Navigate to login after successful register simulation
+            showView('login');
+        }
+
+        function mockLogin() {
+            user.isLoggedIn = true;
+            updateAuthUI();
+            if (pendingCourseId) {
+                const id = pendingCourseId;
+                pendingCourseId = null;
+                openCourse(id);
+            } else {
+                showView('home');
+            }
+        }
+
+        function mockLogout() {
+            user.isLoggedIn = false;
+            updateAuthUI();
+            showView('home');
+        }
+
+        function updateAuthUI() {
+            const loggedInEl = document.getElementById('logged-in');
+            const loggedOutEl = document.getElementById('logged-out');
+            const profileLink = document.getElementById('nav-profile-link');
+            
+            if (user.isLoggedIn) {
+                loggedInEl.classList.remove('hidden');
+                loggedOutEl.classList.add('hidden');
+                profileLink.classList.remove('hidden');
+                document.getElementById('user-avatar-nav').src = user.image;
+            } else {
+                loggedInEl.classList.add('hidden');
+                loggedOutEl.classList.remove('hidden');
+                profileLink.classList.add('hidden');
+            }
+        }
+
+        // --- PROFILE LOGIC ---
+        function renderProfile() {
+            document.getElementById('profile-img').src = user.image;
+            document.getElementById('profile-name').textContent = user.name;
+            document.getElementById('profile-email').textContent = user.email;
+            showProfileUpdate(false);
+        }
+
+        function showProfileUpdate(show) {
+            const card = document.getElementById('profile-card');
+            const form = document.getElementById('profile-update-form');
+            if (show) {
+                card.classList.add('view-hidden');
+                form.classList.remove('view-hidden');
+                document.getElementById('update-name').value = user.name;
+                document.getElementById('update-image').value = user.image;
+            } else {
+                card.classList.remove('view-hidden');
+                form.classList.add('view-hidden');
+            }
+        }
+
+        function saveProfile() {
+            user.name = document.getElementById('update-name').value;
+            user.image = document.getElementById('update-image').value;
+            renderProfile();
+            updateAuthUI();
+        }
+
+        // --- RENDER LOGIC ---
+        function renderCourseCard(course) {
+            const fallback = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80";
+            return `
+                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden card-hover">
+                    <img src="${course.image}" onerror="this.src='${fallback}'" class="w-full h-48 object-cover" alt="${course.title}">
+                    <div class="p-6">
+                        <span class="text-xs font-bold text-blue-600 uppercase mb-2 block">${course.category}</span>
+                        <h3 class="text-xl font-bold mb-2">${course.title}</h3>
+                        <p class="text-gray-500 text-sm mb-4">By ${course.instructor}</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1 text-yellow-500 font-bold">
+                                <i data-lucide="star" fill="currentColor" size="16"></i> ${course.rating}
+                            </div>
+                            <button onclick="openCourse(${course.id})" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Popular Courses
+        function renderHome() {
+            const popularContainer = document.getElementById('popular-courses-grid');
+            popularContainer.innerHTML = '';
+            const popularCourses = [...courses].sort((a, b) => {
+                if (b.rating !== a.rating) return b.rating - a.rating;
+                return a.id - b.id; // Stability: secondary sort by ID
+            }).slice(0, 3);
+            popularCourses.forEach(course => {
+                popularContainer.innerHTML += renderCourseCard(course);
+            });
+
+            const trendingContainer = document.getElementById('trending-grid');
+            trendingContainer.innerHTML = '';
+            courses.slice(0, 4).forEach(course => {
+                trendingContainer.innerHTML += `
+                    <div class="w-full md:w-80 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-left card-hover">
+                        <div class="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase mb-3">
+                            <i data-lucide="trending-up" size="14"></i> Trending
+                        </div>
+                        <h3 class="font-bold text-gray-800 line-clamp-1">${course.title}</h3>
+                        <p class="text-sm text-gray-500 mt-1">${course.instructor}</p>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function openCourse(id) {
+            if (!user.isLoggedIn) {
+                pendingCourseId = id;
+                showView('login');
+                return;
+            }
+            
+            const course = courses.find(c => c.id === id);
+            if (!course) {
+                showView('not-found');
+                return;
+            }
+
+            const container = document.getElementById('course-details-content');
+            const fallback = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80";
+            container.innerHTML = `
+                <div class="lg:col-span-2">
+                    <img src="${course.image}" onerror="this.src='${fallback}'" class="w-full h-96 object-cover rounded-3xl shadow-lg mb-8" alt="${course.title}">
+                    <h1 class="text-4xl font-extrabold mb-4">${course.title}</h1>
+                    <div class="flex items-center gap-6 mb-8 text-gray-600">
+                        <span class="flex items-center gap-2"><i data-lucide="user"></i> ${course.instructor}</span>
+                        <span class="flex items-center gap-2"><i data-lucide="clock"></i> ${course.duration}</span>
+                        <span class="flex items-center gap-2"><i data-lucide="star" class="text-yellow-500"></i> ${course.rating} Rating</span>
+                    </div>
+                    <div class="prose max-w-none">
+                        <h2 class="text-2xl font-bold mb-4">Course Description</h2>
+                        <p class="text-gray-600 leading-relaxed text-lg">${course.description}</p>
+                        <p class="text-gray-600 mt-4">Level: <span class="font-bold text-blue-600">${course.level}</span></p>
+                    </div>
+                </div>
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 sticky top-24">
+                        <h3 class="text-xl font-bold mb-6">Course Curriculum</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="play-circle" class="text-blue-600"></i>
+                                    <span class="font-medium">1. Introduction to the Course</span>
+                                </div>
+                                <span class="text-xs text-gray-400">10:00</span>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between opacity-50">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="lock" class="text-gray-400"></i>
+                                    <span class="font-medium">2. Environment Setup</span>
+                                </div>
+                                <span class="text-xs text-gray-400">15:45</span>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between opacity-50">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="lock" class="text-gray-400"></i>
+                                    <span class="font-medium">3. Deep Dive into Core Concepts</span>
+                                </div>
+                                <span class="text-xs text-gray-400">45:20</span>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between opacity-50">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="lock" class="text-gray-400"></i>
+                                    <span class="font-medium">4. Final Project Overview</span>
+                                </div>
+                                <span class="text-xs text-gray-400">20:10</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg mt-8 hover:bg-blue-700">Enroll Now</button>
+                    </div>
+                </div>
+            `;
+            showView('course-details');
+            lucide.createIcons();
+        }
+
+        function renderAllCourses(filter = "") {
+            const container = document.getElementById('all-courses-grid');
+            container.innerHTML = "";
+            const filtered = courses.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()));
+            filtered.forEach(course => {
+                container.innerHTML += renderCourseCard(course);
+            });
+            lucide.createIcons();
+        }
+
+        function filterCourses() {
+            const query = document.getElementById('course-search').value;
+            renderAllCourses(query);
+        }
+
+        // --- INIT ---
+        lucide.createIcons();
+        document.getElementById('year').textContent = new Date().getFullYear();
+        renderHome();
+        updateAuthUI();
+
+
+        // Mobile Menu Slide-in Logic
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileClose = document.getElementById('mobile-menu-close');
+        const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+        const mobilePanel = document.getElementById('mobile-menu-panel');
+        const mobileOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMenu() {
+            mobileOverlay.classList.remove('pointer-events-none');
+            mobileBackdrop.classList.add('opacity-100', 'pointer-events-auto');
+            mobileBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+            mobilePanel.classList.remove('translate-x-full');
+            mobilePanel.classList.add('translate-x-0');
+        }
+
+        function closeMenu() {
+            mobileBackdrop.classList.remove('opacity-100', 'pointer-events-auto');
+            mobileBackdrop.classList.add('opacity-0', 'pointer-events-none');
+            mobilePanel.classList.remove('translate-x-0');
+            mobilePanel.classList.add('translate-x-full');
+            // Delay removing overlay interaction until animation finishes
+            setTimeout(() => {
+                mobileOverlay.classList.add('pointer-events-none');
+            }, 300);
+        }
+
+        mobileToggle.addEventListener('click', openMenu);
+        mobileClose.addEventListener('click', closeMenu);
+        mobileBackdrop.addEventListener('click', closeMenu);
+
+        // Search Overlay Logic
+        const searchToggle = document.getElementById('search-toggle');
+        const searchClose = document.getElementById('search-close');
+        const searchBackdrop = document.getElementById('search-backdrop');
+        const searchPanel = document.getElementById('search-panel');
+        const searchOverlay = document.getElementById('search-overlay');
+
+        function openSearch() {
+            searchOverlay.classList.remove('pointer-events-none');
+            searchBackdrop.classList.add('opacity-100', 'pointer-events-auto');
+            searchBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+            searchPanel.classList.remove('-translate-y-full');
+            searchPanel.classList.add('translate-y-0');
+            // Focus the input after animation
+            setTimeout(() => searchPanel.querySelector('input')?.focus(), 300);
+        }
+
+        function closeSearch() {
+            searchBackdrop.classList.remove('opacity-100', 'pointer-events-auto');
+            searchBackdrop.classList.add('opacity-0', 'pointer-events-none');
+            searchPanel.classList.remove('translate-y-0');
+            searchPanel.classList.add('-translate-y-full');
+            setTimeout(() => searchOverlay.classList.add('pointer-events-none'), 300);
+        }
+
+        searchToggle.addEventListener('click', openSearch);
+        searchClose.addEventListener('click', closeSearch);
+        searchBackdrop.addEventListener('click', closeSearch);
+
+        // Re-init icons for dynamic content
+        lucide.createIcons();
+    </script>
+</body>
+</html>
