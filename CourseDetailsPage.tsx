@@ -103,11 +103,11 @@ export default function CourseDetailsPage({ params }: { params: { id: string } }
                     key={idx}
                     variants={fadeInUp}
                     whileHover={{ x: 5, backgroundColor: "rgba(0,0,0,0.02)" }}
-                    className="p-4 rounded-xl border border-divider flex items-center justify-between cursor-pointer"
+                    className="p-4 rounded-xl border border-divider flex flex-col sm:flex-row sm:items-center justify-between gap-2 cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
                       {item.locked ? <Lock size={18} className="text-default-400" /> : <PlayCircle size={18} className="text-primary" />}
-                      <span className={`font-medium ${item.locked ? 'text-default-400' : 'text-foreground'}`}>
+                      <span className={`font-medium line-clamp-1 ${item.locked ? 'text-default-400' : 'text-foreground'}`}>
                         {item.title}
                       </span>
                     </div>

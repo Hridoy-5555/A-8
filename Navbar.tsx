@@ -1,5 +1,17 @@
 "use client";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link as HeroUILink, Button, Avatar, Input } from "@heroui/react";
+import { 
+  Navbar, 
+  NavbarBrand, 
+  NavbarContent, 
+  NavbarItem, 
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link as HeroUILink, 
+  Button, 
+  Avatar, 
+  Input 
+} from "@heroui/react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -13,6 +25,7 @@ export default function AppNavbar() {
   const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -58,13 +71,19 @@ export default function AppNavbar() {
       isBordered 
       maxWidth="xl" 
       className="sticky top-0 z-50"
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
     >
-      <NavbarBrand>
+      <NavbarContent className="sm:hidden" justify="start">
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
+      </NavbarContent>
+
+      <NavbarBrand className="sm:flex">
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <HeroUILink as={Link} href="/" className="font-bold text-2xl text-primary">
+          <HeroUILink as={Link} href="/" className="font-bold text-xl md:text-2xl text-primary">
             SkillSphere
           </HeroUILink>
         </motion.div>
@@ -86,7 +105,7 @@ export default function AppNavbar() {
       </NavbarContent>
 
       <NavbarContent justify="end" className="gap-4">
-        <NavbarItem className="hidden md:flex">
+        <NavbarItem className="hidden sm:flex">
           <div className="relative" ref={searchRef}>
             <Input
               classNames={{
@@ -149,7 +168,15 @@ export default function AppNavbar() {
               </HeroUILink>
             </NavbarItem>
             <NavbarItem>
-              <Button color="danger" variant="flat" size="sm" onClick={handleLogout}>
+              <Button 
+                color="danger" 
+                variant="flat" 
+                size="sm" 
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+              >
                 Log Out
               </Button>
             </NavbarItem>
@@ -167,6 +194,39 @@ export default function AppNavbar() {
           </>
         )}
       </NavbarContent>
+
+      <NavbarMenu>
+        {navLinks.map((link, index) => (
+          <NavbarMenuItem key={`${link.name}-${index}`}>
+            <HeroUILink
+              as={Link}
+              className="w-full"
+              color="foreground"
+              href={link.href}
+              size="lg"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {link.name}
+            </HeroUILink>
+          </NavbarMenuItem>
+        ))}
+        {session && (
+           <NavbarMenuItem>
+              <Button
+                className="w-full justify-start text-danger px-0"
+                variant="light"
+                color="danger"
+                size="lg"
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+              >
+                Log Out
+              </Button>
+           </NavbarMenuItem>
+        )}
+      </NavbarMenu>
     </Navbar>
   );
 }

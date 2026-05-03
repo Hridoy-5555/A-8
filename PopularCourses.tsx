@@ -44,7 +44,7 @@ export default function PopularCourses() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
       >
         {popularCourses.map((course) => (
           <CourseCard key={course.id} course={course} />

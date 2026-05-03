@@ -20,9 +20,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} selection:bg-primary selection:text-white antialiased`}>
         <HeroUIProvider>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen relative bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
+            {/* Unique Brand Glows */}
+            <div className="fixed inset-0 z-[-1] opacity-50 pointer-events-none">
+              <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px]" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[120px]" />
+              <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-indigo-500/5 blur-[100px]" />
+            </div>
+            
             <Navbar />
             <main className="flex-grow">
               {children}

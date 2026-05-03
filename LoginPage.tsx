@@ -59,7 +59,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 relative">
+      {/* Unique Design Element: Subtle Grid Pattern */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
+        style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '32px 32px' }} 
+      />
+      
       <motion.div
         initial="hidden"
         animate="visible"
