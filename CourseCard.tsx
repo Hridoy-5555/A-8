@@ -28,6 +28,8 @@ const cardVariants = {
 export default function CourseCard({ course }: { course: Course }) {
   return (
     <motion.div
+      layout
+      exit={{ opacity: 0, scale: 0.9 }}
       variants={cardVariants}
       whileHover={{ y: -5 }}
     >
