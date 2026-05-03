@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Search } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
 import data from "@/data.json";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AppNavbar() {
   const { data: session, isPending } = authClient.useSession();
@@ -53,19 +54,33 @@ export default function AppNavbar() {
   };
 
   return (
-    <Navbar isBordered maxWidth="xl" className="sticky top-0 z-50">
+    <Navbar 
+      isBordered 
+      maxWidth="xl" 
+      className="sticky top-0 z-50"
+    >
       <NavbarBrand>
-        <HeroUILink as={Link} href="/" className="font-bold text-2xl text-primary">
-          SkillSphere
-        </HeroUILink>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <HeroUILink as={Link} href="/" className="font-bold text-2xl text-primary">
+            SkillSphere
+          </HeroUILink>
+        </motion.div>
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-8" justify="center">
         {navLinks.map((link) => (
           <NavbarItem key={link.name}>
-            <HeroUILink as={Link} color="foreground" href={link.href}>
-              {link.name}
-            </HeroUILink>
+            <motion.div
+              whileHover={{ y: -2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <HeroUILink as={Link} color="foreground" href={link.href}>
+                {link.name}
+              </HeroUILink>
+            </motion.div>
           </NavbarItem>
         ))}
       </NavbarContent>
@@ -88,24 +103,32 @@ export default function AppNavbar() {
               onValueChange={setSearchQuery}
               onFocus={() => setIsSearchFocused(true)}
             />
-            {isSearchFocused && searchResults.length > 0 && (
-              <div className="absolute top-full right-0 w-[300px] mt-2 bg-white dark:bg-content1 border border-divider rounded-xl shadow-2xl z-[100] overflow-hidden py-2">
-                {searchResults.map((course) => (
-                  <Link 
-                    key={course.id} 
-                    href={`/courses/${course.id}`}
-                    onClick={() => {
-                      setSearchQuery("");
-                      setIsSearchFocused(false);
-                    }}
-                    className="block px-4 py-2 hover:bg-default-100 transition-colors"
-                  >
-                    <div className="font-bold text-sm text-foreground truncate">{course.title}</div>
-                    <div className="text-xs text-default-500">By {course.instructor}</div>
-                  </Link>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {isSearchFocused && searchResults.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute top-full right-0 w-[300px] mt-2 bg-white dark:bg-content1 border border-divider rounded-xl shadow-2xl z-[100] overflow-hidden py-2"
+                >
+                  {searchResults.map((course) => (
+                    <Link 
+                      key={course.id} 
+                      href={`/courses/${course.id}`}
+                      onClick={() => {
+                        setSearchQuery("");
+                        setIsSearchFocused(false);
+                      }}
+                      className="block px-4 py-2 hover:bg-default-100 transition-colors"
+                    >
+                      <div className="font-bold text-sm text-foreground truncate">{course.title}</div>
+                      <div className="text-xs text-default-500">By {course.instructor}</div>
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </NavbarItem>
         {isPending ? (
