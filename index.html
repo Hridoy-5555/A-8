@@ -5,141 +5,179 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SkillSphere - Upgrade Your Skills Today</title>
   
+  <!-- Tailwind & DaisyUI via CDN -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-base-100 text-base-content antialiased">
 
+  <!-- ================= PERSISTENT MOBILE-RESPONSIVE NAVBAR ================= -->
   <header class="navbar bg-base-100 shadow-sm px-4 md:px-8 sticky top-0 z-50 backdrop-blur-md bg-opacity-90 border-b border-base-200">
-    <div class="flex-1">
-      <button onclick="navigate('home')" class="btn btn-ghost text-xl font-bold tracking-tight text-primary">SkillSphere</button>
+    <!-- Navbar Start (Mobile Menu Trigger + Brand) -->
+    <div class="navbar-start flex items-center">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden mr-1" aria-label="Toggle Navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow bg-base-100 rounded-box w-52 border border-base-200 font-medium space-y-1">
+          <li><button onclick="navigate('home')">Home</button></li>
+          <li><button onclick="navigate('courses')">Courses</button></li>
+          <li id="mobile-nav-profile-link" class="hidden"><button onclick="navigate('profile')">My Profile</button></li>
+        </ul>
+      </div>
+      <button onclick="navigate('home')" class="btn btn-ghost text-xl font-bold tracking-tight text-primary p-0 sm:p-2">SkillSphere</button>
     </div>
-    <div class="flex-none gap-4">
-      <ul class="menu menu-horizontal px-1 font-medium hidden sm:flex gap-2">
+    
+    <!-- Navbar Center (Desktop Only Navigation Menu Links) -->
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1 font-medium gap-2">
         <li><button onclick="navigate('home')">Home</button></li>
         <li><button onclick="navigate('courses')">Courses</button></li>
         <li id="nav-profile-link" class="hidden"><button onclick="navigate('profile')">My Profile</button></li>
       </ul>
+    </div>
 
+    <!-- Navbar End (Profile Matrix Dashboard Status Controls) -->
+    <div class="navbar-end gap-2">
       <div id="auth-nav-container" class="flex items-center gap-2">
-        </div>
+        <!-- Injected via JavaScript state parameters dynamically -->
+      </div>
     </div>
   </header>
 
-  <div id="toast-container" class="toast toast-top toast-end z-[9999] top-16"></div>
+  <!-- ================= NOTIFICATION SYSTEM (TOAST) ================= -->
+  <div id="toast-container" class="toast toast-top toast-end z-[9999] top-16 max-w-sm w-full p-4 sm:p-6"></div>
 
+  <!-- ================= LOADER ELEMENT ================= -->
   <div id="global-loader" class="hidden fixed inset-0 bg-base-100/70 z-[9998] flex items-center justify-center">
     <span class="loading loading-ring loading-lg text-primary"></span>
   </div>
 
+  <!-- ================= MAIN LAYOUT ROUTE TARGETS ================= -->
   <main class="flex-grow">
     
-    <section id="view-home" class="view hidden space-y-20 pb-16">
-      <div class="relative w-full h-[450px] overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center">
-        <div id="hero-slide-1" class="absolute inset-0 flex flex-col justify-center items-center text-center p-6 transition-opacity duration-1000 opacity-100">
-          <h1 class="text-4xl md:text-6xl font-black mb-4">Upgrade Your Skills Today 🚀</h1>
-          <p class="text-lg max-w-2xl mb-6 opacity-80">Learn from Industry Experts with high-performance production blueprints.</p>
-          <button onclick="navigate('courses')" class="btn btn-primary text-white px-8">Explore Architecture</button>
+    <!-- 1. HOME VIEW -->
+    <section id="view-home" class="view hidden space-y-14 md:space-y-20 pb-16">
+      <!-- Touch-Safe Hero Slider Section -->
+      <div class="relative w-full h-[380px] md:h-[450px] overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center">
+        <div id="hero-slide-1" class="absolute inset-0 flex flex-col justify-center items-center text-center p-4 md:p-6 transition-opacity duration-1000 opacity-100">
+          <h1 class="text-3xl md:text-6xl font-black mb-4 px-2">Upgrade Your Skills Today 🚀</h1>
+          <p class="text-sm md:text-lg max-w-2xl mb-6 opacity-80 px-4">Learn from Industry Experts with high-performance production blueprints.</p>
+          <button onclick="navigate('courses')" class="btn btn-primary text-white px-6 md:px-8 btn-sm md:btn-md">Explore Architecture</button>
         </div>
-        <div id="hero-slide-2" class="absolute inset-0 flex flex-col justify-center items-center text-center p-6 transition-opacity duration-1000 opacity-0 pointer-events-none">
-          <h1 class="text-4xl md:text-6xl font-black mb-4">Master Modern Tech Systems</h1>
-          <p class="text-lg max-w-2xl mb-6 opacity-80">Skip theoretical noise. Build structural applications with verified workflows.</p>
-          <button onclick="navigate('courses')" class="btn btn-secondary text-white px-8">View Masterclasses</button>
+        <div id="hero-slide-2" class="absolute inset-0 flex flex-col justify-center items-center text-center p-4 md:p-6 transition-opacity duration-1000 opacity-0 pointer-events-none">
+          <h1 class="text-3xl md:text-6xl font-black mb-4 px-2">Master Modern Tech Systems</h1>
+          <p class="text-sm md:text-lg max-w-2xl mb-6 opacity-80 px-4">Skip theoretical noise. Build structural applications with verified workflows.</p>
+          <button onclick="navigate('courses')" class="btn btn-secondary text-white px-6 md:px-8 btn-sm md:btn-md">View Masterclasses</button>
         </div>
+        <!-- Slider Navigation Dots -->
         <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-          <button onclick="switchHeroSlide(1)" class="w-3 h-3 rounded-full bg-white bg-opacity-100" id="hero-dot-1"></button>
-          <button onclick="switchHeroSlide(2)" class="w-3 h-3 rounded-full bg-white bg-opacity-40" id="hero-dot-2"></button>
+          <button onclick="switchHeroSlide(1)" class="w-3 h-3 rounded-full bg-white bg-opacity-100" id="hero-dot-1" aria-label="Slide 1"></button>
+          <button onclick="switchHeroSlide(2)" class="w-3 h-3 rounded-full bg-white bg-opacity-40" id="hero-dot-2" aria-label="Slide 2"></button>
         </div>
       </div>
 
+      <!-- Popular Courses Section -->
       <div class="max-w-7xl mx-auto px-4">
-        <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold mb-2">🔥 Popular Masterclasses</h2>
-          <p class="opacity-70 text-sm">Top tier curriculums matching student key operational matrices</p>
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-2xl md:text-4xl font-bold mb-2">🔥 Popular Masterclasses</h2>
+          <p class="opacity-70 text-xs md:text-sm">Top tier curriculums matching student key operational matrices</p>
         </div>
-        <div id="popular-courses-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        <div id="popular-courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:grid-cols-3 md:gap-8"></div>
       </div>
 
-      <div class="max-w-7xl mx-auto px-4 bg-base-200 py-12 rounded-2xl border border-base-300">
-        <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold mb-2">⚡ New Releases</h2>
-          <p class="opacity-70 text-sm">Freshly deployed architecture blueprints added this week</p>
+      <!-- Extra Section: New Releases Requirement -->
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="bg-base-200 py-8 md:py-12 px-4 md:px-8 rounded-2xl border border-base-300">
+          <div class="text-center mb-8">
+            <h2 class="text-2xl md:text-4xl font-bold mb-2">⚡ New Releases</h2>
+            <p class="opacity-70 text-xs md:text-sm">Freshly deployed architecture blueprints added this week</p>
+          </div>
+          <div id="new-releases-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"></div>
         </div>
-        <div id="new-releases-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
       </div>
 
+      <!-- Learning Tips Section -->
       <div class="max-w-5xl mx-auto px-4">
-        <div class="bg-gradient-to-br from-primary to-primary-focus text-primary-content p-8 md:p-12 rounded-3xl shadow-xl flex flex-col md:flex-row items-center gap-8">
-          <div class="md:w-2/3 space-y-4">
+        <div class="bg-gradient-to-br from-primary to-primary-focus text-primary-content p-6 md:p-12 rounded-3xl shadow-xl flex flex-col md:flex-row items-center gap-6 md:gap-8">
+          <div class="w-full md:w-2/3 space-y-4">
             <h2 class="text-2xl font-black">📌 Optimization & Study Blueprint</h2>
-            <ul class="space-y-3 opacity-90 text-sm">
+            <ul class="space-y-3 opacity-90 text-xs md:text-sm leading-relaxed">
               <li>⏱️ <strong>Time Management:</strong> Block out uninterrupted 90-minute hyper-focus sections inside development routines.</li>
               <li>🧠 <strong>Active Implementation:</strong> Write actual code patterns concurrently alongside tracking digital specifications.</li>
               <li>🚀 <strong>Incremental Testing:</strong> Ship components rapidly into real, localized testing environments.</li>
             </ul>
           </div>
-          <div class="md:w-1/3 text-6xl text-center md:text-right select-none opacity-30">🧠🔧</div>
+          <div class="hidden md:block md:w-1/3 text-6xl text-right select-none opacity-30">🧠🔧</div>
         </div>
       </div>
 
+      <!-- Top Instructors Section -->
       <div class="max-w-7xl mx-auto px-4">
-        <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold mb-2">🏆 Lead Engineering Faculty</h2>
-          <p class="opacity-70 text-sm">Industry veterans holding active production metrics</p>
+        <div class="text-center mb-8 md:mb-12">
+          <h2 class="text-2xl md:text-4xl font-bold mb-2">🏆 Lead Engineering Faculty</h2>
+          <p class="opacity-70 text-xs md:text-sm">Industry veterans holding active production metrics</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <div class="flex flex-col items-center bg-base-100 p-6 rounded-2xl border border-base-200 shadow-sm text-center">
-            <div class="avatar mb-4"><div class="w-24 rounded-full ring ring-primary ring-offset-2"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200" alt="" /></div></div>
+            <div class="avatar mb-4"><div class="w-20 md:w-24 rounded-full ring ring-primary ring-offset-2"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200" alt="John" /></div></div>
             <h3 class="font-bold text-lg">John Doe</h3>
-            <p class="text-primary text-xs">Principal Dev Architect</p>
+            <p class="text-primary text-xs font-semibold">Principal Dev Architect</p>
           </div>
           <div class="flex flex-col items-center bg-base-100 p-6 rounded-2xl border border-base-200 shadow-sm text-center">
-            <div class="avatar mb-4"><div class="w-24 rounded-full ring ring-secondary ring-offset-2"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200" alt="" /></div></div>
+            <div class="avatar mb-4"><div class="w-20 md:w-24 rounded-full ring ring-secondary ring-offset-2"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200" alt="Jane" /></div></div>
             <h3 class="font-bold text-lg">Jane Smith</h3>
-            <p class="text-secondary text-xs">Lead UI/UX Engineer</p>
+            <p class="text-secondary text-xs font-semibold">Lead UI/UX Engineer</p>
           </div>
-          <div class="flex flex-col items-center bg-base-100 p-6 rounded-2xl border border-base-200 shadow-sm text-center">
-            <div class="avatar mb-4"><div class="w-24 rounded-full ring ring-accent ring-offset-2"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200" alt="" /></div></div>
+          <div class="flex flex-col items-center bg-base-100 p-6 rounded-2xl border border-base-200 shadow-sm text-center sm:col-span-2 lg:col-span-1 mx-auto w-full max-w-sm sm:max-w-none">
+            <div class="avatar mb-4"><div class="w-20 md:w-24 rounded-full ring ring-accent ring-offset-2"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200" alt="Alan" /></div></div>
             <h3 class="font-bold text-lg">Dr. Alan Turing</h3>
-            <p class="text-accent text-xs">Core Systems Researcher</p>
+            <p class="text-accent text-xs font-semibold">Core Systems Researcher</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="view-courses" class="view hidden max-w-7xl mx-auto px-4 py-12 min-h-[70vh]">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+    <!-- 2. ALL COURSES VIEW (WITH MOBILE SEARCH FLUIDITY) -->
+    <section id="view-courses" class="view hidden max-w-7xl mx-auto px-4 py-8 md:py-12 min-h-[70vh]">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 md:mb-12">
         <div>
-          <h1 class="text-3xl font-black mb-1">All Available Curriculums</h1>
-          <p class="opacity-70 text-sm">Filter, locate, and initialize your system blueprint stacks</p>
+          <h1 class="text-2xl md:text-3xl font-black mb-1">All Available Curriculums</h1>
+          <p class="opacity-70 text-xs md:text-sm">Filter, locate, and initialize your system blueprint stacks</p>
         </div>
+        <!-- Challenge 1: Responsive Search Input Field -->
         <div class="form-control w-full md:w-80">
-          <input type="text" id="course-search-input" oninput="executeCourseSearch()" placeholder="Search courses by title..." class="input input-bordered w-full focus:input-primary" />
+          <input type="text" id="course-search-input" oninput="executeCourseSearch()" placeholder="Search courses by title..." class="input input-bordered w-full focus:input-primary input-sm md:input-md" />
         </div>
       </div>
-      <div id="all-courses-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+      <div id="all-courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
     </section>
 
-    <section id="view-course-details" class="view hidden max-w-5xl mx-auto px-4 py-12">
-      </section>
+    <!-- 3. COURSE DETAILS VIEW (RESPONSIVE SPLIT PANELS) -->
+    <section id="view-course-details" class="view hidden max-w-5xl mx-auto px-4 py-6 md:py-12">
+      <!-- Generated fluid layout structural details injected here -->
+    </section>
 
-    <section id="view-login" class="view hidden min-h-[70vh] flex items-center justify-center p-4">
+    <!-- 4. LOGIN VIEW -->
+    <section id="view-login" class="view hidden min-h-[65vh] flex items-center justify-center p-4">
       <div class="card w-full max-w-md bg-base-100 shadow-xl border border-base-200">
-        <form onsubmit="handleEmailLogin(event)" class="card-body">
-          <h2 class="card-title text-2xl font-black text-center block mb-4">Access Portal Login</h2>
+        <form onsubmit="handleEmailLogin(event)" class="card-body p-6 sm:p-8">
+          <h2 class="card-title text-xl md:text-2xl font-black text-center block mb-2">Access Portal Login</h2>
           <div class="form-control">
-            <label class="label"><span class="label-text">Email Address</span></label>
-            <input type="email" id="login-email" placeholder="you@domain.com" class="input input-bordered" required />
+            <label class="label"><span class="label-text text-xs font-medium">Email Address</span></label>
+            <input type="email" id="login-email" placeholder="you@domain.com" class="input input-bordered input-sm md:input-md" required />
           </div>
           <div class="form-control mt-2">
-            <label class="label"><span class="label-text">Password</span></label>
-            <input type="password" id="login-password" placeholder="••••••••" class="input input-bordered" required />
+            <label class="label"><span class="label-text text-xs font-medium">Password</span></label>
+            <input type="password" id="login-password" placeholder="••••••••" class="input input-bordered input-sm md:input-md" required />
           </div>
-          <button type="submit" class="btn btn-primary text-white btn-block mt-6">Login</button>
+          <button type="submit" class="btn btn-primary text-white btn-block mt-6 btn-sm md:btn-md">Login</button>
           
-          <div class="divider my-4">OR</div>
-          <button type="button" onclick="handleSocialLogin()" class="btn btn-outline btn-neutral btn-block gap-2">
-            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
+          <div class="divider my-4 text-xs opacity-60">OR</div>
+          <button type="button" onclick="handleSocialLogin()" class="btn btn-outline btn-neutral btn-block gap-2 btn-sm md:btn-md">
+            <svg class="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
             Sign In with Google
           </button>
           <p class="text-center text-xs mt-4 opacity-70">
@@ -149,30 +187,31 @@
       </div>
     </section>
 
-    <section id="view-register" class="view hidden min-h-[70vh] flex items-center justify-center p-4">
+    <!-- 5. REGISTER VIEW -->
+    <section id="view-register" class="view hidden min-h-[65vh] flex items-center justify-center p-4">
       <div class="card w-full max-w-md bg-base-100 shadow-xl border border-base-200">
-        <form onsubmit="handleEmailRegister(event)" class="card-body">
-          <h2 class="card-title text-2xl font-black text-center block mb-4">Create Account</h2>
+        <form onsubmit="handleEmailRegister(event)" class="card-body p-6 sm:p-8">
+          <h2 class="card-title text-xl md:text-2xl font-black text-center block mb-2">Create Account</h2>
           <div class="form-control">
-            <label class="label"><span class="label-text">Full Name</span></label>
-            <input type="text" id="reg-name" placeholder="John Doe" class="input input-bordered" required />
+            <label class="label"><span class="label-text text-xs font-medium">Full Name</span></label>
+            <input type="text" id="reg-name" placeholder="John Doe" class="input input-bordered input-sm md:input-md" required />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text">Email Address</span></label>
-            <input type="email" id="reg-email" placeholder="you@domain.com" class="input input-bordered" required />
+            <label class="label"><span class="label-text text-xs font-medium">Email Address</span></label>
+            <input type="email" id="reg-email" placeholder="you@domain.com" class="input input-bordered input-sm md:input-md" required />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text">Photo URL Link</span></label>
-            <input type="url" id="reg-photo" placeholder="https://images.unsplash.com/..." class="input input-bordered" />
+            <label class="label"><span class="label-text text-xs font-medium">Photo URL Link</span></label>
+            <input type="url" id="reg-photo" placeholder="https://images.unsplash.com/..." class="input input-bordered input-sm md:input-md" />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text">Password</span></label>
-            <input type="password" id="reg-password" placeholder="••••••••" class="input input-bordered" required />
+            <label class="label"><span class="label-text text-xs font-medium">Password</span></label>
+            <input type="password" id="reg-password" placeholder="••••••••" class="input input-bordered input-sm md:input-md" required />
           </div>
-          <button type="submit" class="btn btn-primary text-white btn-block mt-6">Register Account</button>
+          <button type="submit" class="btn btn-primary text-white btn-block mt-6 btn-sm md:btn-md">Register Account</button>
           
-          <div class="divider my-4">OR</div>
-          <button type="button" onclick="handleSocialLogin()" class="btn btn-outline btn-neutral btn-block gap-2">
+          <div class="divider my-4 text-xs opacity-60">OR</div>
+          <button type="button" onclick="handleSocialLogin()" class="btn btn-outline btn-neutral btn-block btn-sm md:btn-md">
             Authenticate with Google
           </button>
           <p class="text-center text-xs mt-4 opacity-70">
@@ -182,122 +221,130 @@
       </div>
     </section>
 
-    <section id="view-profile" class="view hidden max-w-2xl mx-auto px-4 py-16">
+    <!-- 6. MY PROFILE VIEW -->
+    <section id="view-profile" class="view hidden max-w-2xl mx-auto px-4 py-8 md:py-16">
       <div class="bg-base-100 border border-base-200 shadow-xl rounded-3xl overflow-hidden">
-        <div class="h-32 bg-gradient-to-r from-primary to-secondary"></div>
-        <div class="p-8 relative pt-0 flex flex-col items-center sm:items-start text-center sm:text-left">
-          <div class="avatar -mt-16 mb-4">
-            <div class="w-32 h-32 rounded-full border-4 border-base-100 shadow-xl bg-neutral text-neutral-content">
+        <div class="h-28 md:h-32 bg-gradient-to-r from-primary to-secondary"></div>
+        <div class="p-6 md:p-8 relative pt-0 flex flex-col items-center sm:items-start text-center sm:text-left">
+          <div class="avatar -mt-12 md:-mt-16 mb-4">
+            <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-base-100 shadow-xl bg-neutral text-neutral-content">
               <img id="profile-card-img" src="" alt="Avatar" />
             </div>
           </div>
           <div class="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 id="profile-card-name" class="text-3xl font-black tracking-tight">User</h1>
-              <p id="profile-card-email" class="opacity-60 text-sm font-mono mt-1">email@domain.com</p>
+              <h1 id="profile-card-name" class="text-2xl md:text-3xl font-black tracking-tight">User</h1>
+              <p id="profile-card-email" class="opacity-60 text-xs md:text-sm font-mono mt-1">email@domain.com</p>
             </div>
-            <button onclick="navigate('profile-update')" class="btn btn-outline btn-primary btn-sm px-6">Update Profile Info</button>
+            <!-- Challenge 3: Path to Update Form -->
+            <button onclick="navigate('profile-update')" class="btn btn-outline btn-primary btn-sm px-6 w-full sm:w-auto">Update Profile Info</button>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="view-profile-update" class="view hidden max-w-md mx-auto px-4 py-16">
+    <!-- 7. PROFILE UPDATE ROUTE FORM -->
+    <section id="view-profile-update" class="view hidden max-w-md mx-auto px-4 py-8 md:py-16">
       <div class="card bg-base-100 border border-base-200 shadow-xl">
-        <form onsubmit="handleProfileUpdate(event)" class="card-body space-y-4">
+        <form onsubmit="handleProfileUpdate(event)" class="card-body p-6 sm:p-8 space-y-4">
           <h2 class="card-title text-xl font-bold">Update Profile Information</h2>
           <div class="form-control">
             <label class="label"><span class="label-text text-xs font-bold">Display Name</span></label>
-            <input type="text" id="update-name" class="input input-bordered focus:input-primary" required />
+            <input type="text" id="update-name" class="input input-bordered focus:input-primary input-sm md:input-md" required />
           </div>
           <div class="form-control">
             <label class="label"><span class="label-text text-xs font-bold">Image URL Spec</span></label>
-            <input type="url" id="update-image" class="input input-bordered focus:input-primary" required />
+            <input type="url" id="update-image" class="input input-bordered focus:input-primary input-sm md:input-md" required />
           </div>
           <div class="card-actions justify-end gap-2 mt-4">
-            <button type="button" onclick="navigate('profile')" class="btn btn-ghost btn-sm">Cancel</button>
-            <button type="submit" class="btn btn-primary btn-sm text-white px-6">Update Information</button>
+            <button type="button" onclick="navigate('profile')" class="btn btn-ghost btn-sm w-full sm:w-auto">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm text-white px-6 w-full sm:w-auto">Update Information</button>
           </div>
         </form>
       </div>
     </section>
 
-    <section id="view-not-found" class="view hidden min-h-[70vh] flex flex-col items-center justify-center px-6 text-center">
-      <div class="text-8xl mb-4 select-none">🧩</div>
-      <h1 class="text-4xl font-black tracking-tight mb-2">404 - Page Missing</h1>
-      <p class="opacity-70 max-w-md mb-8 text-sm">The route calculation endpoint context could not be parsed.</p>
-      <button onclick="navigate('home')" class="btn btn-primary text-white px-8 shadow-md">Return Home</button>
+    <!-- 8. NOT FOUND PAGE INTERFACE ROUTE -->
+    <section id="view-not-found" class="view hidden min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+      <div class="text-6xl md:text-8xl mb-4 select-none">🧩</div>
+      <h1 class="text-2xl md:text-4xl font-black tracking-tight mb-2">404 - Page Missing</h1>
+      <p class="opacity-70 max-w-md mb-6 text-xs md:text-sm">The route calculation endpoint context could not be parsed.</p>
+      <button onclick="navigate('home')" class="btn btn-primary text-white px-8 shadow-md btn-sm md:btn-md">Return Home</button>
     </section>
 
   </main>
 
-  <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 pt-16 pb-8 mt-20">
-    <div class="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-12 border-b border-slate-800">
+  <!-- ================= MASTER ENHANCED RESPONSIVE FOOTER ================= -->
+  <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 pt-12 pb-6 mt-16">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 pb-10 border-b border-slate-800">
       
-      <div class="lg:col-span-2 space-y-4">
-        <div class="flex items-center gap-2 text-2xl font-black text-white tracking-tight">
+      <!-- Column 1: Brand Info -->
+      <div class="sm:col-span-2 space-y-4">
+        <div class="flex items-center gap-2 text-xl font-black text-white tracking-tight">
           <span class="text-primary">⚡</span> SkillSphere
         </div>
-        <p class="text-sm max-w-sm leading-relaxed opacity-80">
+        <p class="text-xs md:text-sm max-w-sm leading-relaxed opacity-80">
           The ultimate engineering runtime environment. Skip theoretical noise and acquire actual access to structural production pipelines managed by enterprise-grade operators.
         </p>
-        <div class="flex items-center gap-4 pt-2">
-          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-white cursor-pointer" title="Twitter">𝕏</a>
-          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-white cursor-pointer" title="GitHub">🐙</a>
-          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-white cursor-pointer" title="LinkedIn">💼</a>
-          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-white cursor-pointer" title="YouTube">📺</a>
+        <div class="flex items-center gap-3 pt-2">
+          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-sm text-white cursor-pointer">𝕏</a>
+          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-sm text-white cursor-pointer">🐙</a>
+          <a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-200 text-sm text-white cursor-pointer">💼</a>
         </div>
       </div>
 
-      <div class="space-y-4">
+      <!-- Column 2: Platform Links -->
+      <div class="space-y-3">
         <h4 class="text-xs font-bold uppercase tracking-widest text-white">Curriculums</h4>
-        <ul class="space-y-2 text-sm">
-          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors">Development Tracks</button></li>
-          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors">UI/UX Systems</button></li>
-          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors">Data Engineering</button></li>
-          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors">Cybersecurity Core</button></li>
+        <ul class="space-y-2 text-xs md:text-sm">
+          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors text-left">Development Tracks</button></li>
+          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors text-left">UI/UX Systems</button></li>
+          <li><button onclick="navigate('courses')" class="hover:text-primary transition-colors text-left">Data Engineering</button></li>
         </ul>
       </div>
 
-      <div class="space-y-4">
+      <!-- Column 3: Corporate Links -->
+      <div class="space-y-3">
         <h4 class="text-xs font-bold uppercase tracking-widest text-white">Enterprise</h4>
-        <ul class="space-y-2 text-sm">
+        <ul class="space-y-2 text-xs md:text-sm">
           <li><a href="#" class="hover:text-primary transition-colors">About Faculty</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Institutional Partners</a></li>
           <li><a href="#" class="hover:text-primary transition-colors">System Status</a></li>
           <li><a href="#" class="hover:text-primary transition-colors">Contact Support</a></li>
         </ul>
       </div>
 
-      <div class="space-y-4">
+      <!-- Column 4: Newsletter Box -->
+      <div class="space-y-3">
         <h4 class="text-xs font-bold uppercase tracking-widest text-white">Telemetry Updates</h4>
         <p class="text-xs opacity-75 leading-relaxed">
-          Subscribe to capture system changelogs, new architectural specifications, and dropped modules instantly.
+          Subscribe to capture system changelogs and dropped module specs instantly.
         </p>
         <form onsubmit="showToast('Newsletter subscription approved.'); this.reset(); return false;" class="form-control space-y-2">
           <div class="relative flex w-full">
-            <input type="email" placeholder="context@domain.com" class="input input-sm input-bordered bg-slate-800 border-slate-700 text-white focus:border-primary w-full pr-16" required />
-            <button type="submit" class="btn btn-sm btn-primary text-white absolute right-0 top-0 rounded-l-none">Join</button>
+            <input type="email" placeholder="context@domain.com" class="input input-sm input-bordered bg-slate-800 border-slate-700 text-white focus:border-primary w-full pr-14 text-xs" required />
+            <button type="submit" class="btn btn-sm btn-primary text-white absolute right-0 top-0 rounded-l-none text-xs">Join</button>
           </div>
         </form>
       </div>
 
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 md:px-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+    <!-- Meta Legal Row Layer -->
+    <div class="max-w-7xl mx-auto px-6 md:px-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-center md:text-left">
       <div class="opacity-60">
-        &copy; 2026 SkillSphere Labs Inc. Operating globally under high-fidelity semantic matrices.
+        &copy; 2026 SkillSphere Labs Inc. Operating under high-fidelity semantic matrices.
       </div>
-      <div class="flex items-center gap-6 opacity-75 font-medium">
+      <div class="flex flex-wrap justify-center gap-4 md:gap-6 opacity-75 font-medium">
         <a href="#" class="hover:text-primary transition-colors">Terms & Conditions</a>
         <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-        <a href="#" class="hover:text-primary transition-colors">Cookie Configurations</a>
+        <a href="#" class="hover:text-primary transition-colors">Cookies Configuration</a>
       </div>
     </div>
   </footer>
 
+  <!-- ================= STATE MANAGEMENT AND CORE ENGINE INTERFACE ================= -->
   <script>
-    // 1. JSON Data Generation Matrix
+    // 1. Database Mock Generation Schema
     const coursesDatabase = [
       {
         "id": 1,
@@ -367,7 +414,6 @@
       }
     ];
 
-    // Global App Routing Protection State
     let currentUser = JSON.parse(localStorage.getItem('ss_user')) || null;
     let currentRedirectTarget = null;
     let activeHeroSlide = 1;
@@ -376,25 +422,23 @@
     function showToast(message, type = 'success') {
       const container = document.getElementById('toast-container');
       const alertDiv = document.createElement('div');
-      alertDiv.className = `alert ${type === 'success' ? 'alert-success text-white bg-emerald-600' : 'alert-error text-white bg-rose-600'} shadow-lg text-sm rounded-xl transition-all duration-300 opacity-0 transform translate-y-2`;
+      alertDiv.className = `alert ${type === 'success' ? 'alert-success text-white bg-emerald-600' : 'alert-error text-white bg-rose-600'} shadow-lg text-xs rounded-xl transition-all duration-300 opacity-0 transform translate-y-2 p-3`;
       alertDiv.innerHTML = `<div><span>${message}</span></div>`;
       container.appendChild(alertDiv);
       
-      // Animate in
-      setTimeout(() => {
-        alertDiv.classList.remove('opacity-0', 'translate-y-2');
-      }, 10);
-
-      // Dismiss tracking
+      setTimeout(() => alertDiv.classList.remove('opacity-0', 'translate-y-2'), 10);
       setTimeout(() => {
         alertDiv.classList.add('opacity-0', 'translate-y--2');
         setTimeout(() => alertDiv.remove(), 300);
       }, 4000);
     }
 
-    // App Router Simulation Engine
+    // Interactive App Routing Engine Configuration
     function navigate(viewId, payloadId = null) {
-      // Requirements verification for Protected Route checking
+      // Close dropdown menus immediately on active mobile taps
+      const activeDropdown = document.activeElement;
+      if (activeDropdown) activeDropdown.blur();
+
       if (viewId === 'profile' || viewId === 'profile-update' || viewId === 'course-details') {
         if (!currentUser) {
           showToast("Authentication required to access route node context.", "error");
@@ -404,7 +448,6 @@
         }
       }
 
-      // Show loader component
       const loader = document.getElementById('global-loader');
       loader.classList.remove('hidden');
 
@@ -412,7 +455,6 @@
         document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
         loader.classList.add('hidden');
 
-        // Layout Router Logic Target Selection
         if (viewId === 'home') {
           renderHomeView();
           document.getElementById('view-home').classList.remove('hidden');
@@ -438,24 +480,26 @@
         
         window.scrollTo(0,0);
         updateNavbarState();
-      }, 350); // Simulates Next.js data-fetching loader runtime 
+      }, 350); 
     }
 
-    // Sync Authentication Navigation Display Matrix
+    // Sync Authentication Navbar Layout Nodes
     function updateNavbarState() {
       const container = document.getElementById('auth-nav-container');
       const profileLink = document.getElementById('nav-profile-link');
+      const mobileProfileLink = document.getElementById('mobile-nav-profile-link');
       
       if (currentUser) {
-        profileLink.classList.remove('hidden');
+        profileLink?.classList.remove('hidden');
+        mobileProfileLink?.classList.remove('hidden');
         container.innerHTML = `
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar border border-primary/20">
-              <div class="w-10 rounded-full bg-neutral text-neutral-content">
+              <div class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-neutral text-neutral-content">
                 <img src="${currentUser.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100'}" alt="Avatar" />
               </div>
             </div>
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 border border-base-200">
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[50] p-2 shadow bg-base-100 rounded-box w-48 border border-base-200">
               <li><button onclick="navigate('profile')">My Profile</button></li>
               <div class="divider my-1"></div>
               <li><button onclick="handleLogout()" class="text-error font-bold">Logout</button></li>
@@ -463,15 +507,16 @@
           </div>
         `;
       } else {
-        profileLink.classList.add('hidden');
+        profileLink?.classList.add('hidden');
+        mobileProfileLink?.classList.add('hidden');
         container.innerHTML = `
-          <button onclick="navigate('login')" class="btn btn-ghost btn-sm">Login</button>
-          <button onclick="navigate('register')" class="btn btn-primary btn-sm text-white">Register</button>
+          <button onclick="navigate('login')" class="btn btn-ghost btn-xs sm:btn-sm px-2">Login</button>
+          <button onclick="navigate('register')" class="btn btn-primary btn-xs sm:btn-sm text-white px-3">Register</button>
         `;
       }
     }
 
-    // Slider Transformation Function
+    // Hero Carousels Active Toggle
     function switchHeroSlide(slideNum) {
       activeHeroSlide = slideNum;
       const s1 = document.getElementById('hero-slide-1');
@@ -482,73 +527,60 @@
       if (slideNum === 1) {
         s1.classList.replace('opacity-0', 'opacity-100'); s1.classList.remove('pointer-events-none');
         s2.classList.replace('opacity-100', 'opacity-0'); s2.classList.add('pointer-events-none');
-        d1.classList.replace('bg-opacity-40', 'bg-opacity-100');
-        d2.classList.replace('bg-opacity-100', 'bg-opacity-40');
+        d1.classList.replace('bg-opacity-40', 'bg-opacity-100'); d2.classList.replace('bg-opacity-100', 'bg-opacity-40');
       } else {
         s2.classList.replace('opacity-0', 'opacity-100'); s2.classList.remove('pointer-events-none');
         s1.classList.replace('opacity-100', 'opacity-0'); s1.classList.add('pointer-events-none');
-        d2.classList.replace('bg-opacity-40', 'bg-opacity-100');
-        d1.classList.replace('bg-opacity-100', 'bg-opacity-40');
+        d2.classList.replace('bg-opacity-40', 'bg-opacity-100'); d1.classList.replace('bg-opacity-100', 'bg-opacity-40');
       }
     }
 
-    // Auto Loop Engine for Slider (Requirement: Swiper equivalent)
-    setInterval(() => {
-      switchHeroSlide(activeHeroSlide === 1 ? 2 : 1);
-    }, 6000);
+    setInterval(() => switchHeroSlide(activeHeroSlide === 1 ? 2 : 1), 6000);
 
-    // Renderer Module: Homepage Data 
+    // Renderer Module: Views
     function renderHomeView() {
-      // Popular Logic Array (Top 3 highest-rated)
       const popular = [...coursesDatabase].sort((a,b) => b.rating - a.rating).slice(0, 3);
-      const popularGrid = document.getElementById('popular-courses-grid');
-      popularGrid.innerHTML = popular.map(c => generateCourseCardMarkup(c)).join('');
+      document.getElementById('popular-courses-grid').innerHTML = popular.map(c => generateCourseCardMarkup(c)).join('');
 
-      // New Releases Requirement Array Layout
       const releases = [...coursesDatabase].slice(3, 6);
-      const releasesGrid = document.getElementById('new-releases-grid');
-      releasesGrid.innerHTML = releases.map(c => `
+      document.getElementById('new-releases-grid').innerHTML = releases.map(c => `
         <div class="card bg-base-100 shadow-sm border border-base-300 p-5 flex flex-col justify-between">
           <div>
-            <div class="badge badge-secondary text-xs mb-2">${c.category}</div>
-            <h3 class="font-bold text-lg line-clamp-1">${c.title}</h3>
+            <div class="badge badge-secondary text-[10px] mb-2">${c.category}</div>
+            <h3 class="font-bold text-base md:text-lg line-clamp-1">${c.title}</h3>
             <p class="text-xs opacity-70 mt-1 line-clamp-2">${c.description}</p>
           </div>
           <div class="flex justify-between items-center mt-4 pt-2 border-t border-base-200">
-            <span class="text-xs font-mono opacity-60">${c.duration}</span>
-            <button onclick="navigate('course-details', ${c.id})" class="text-sm font-bold text-secondary hover:underline">Details →</button>
+            <span class="text-[11px] font-mono opacity-60">${c.duration}</span>
+            <button onclick="navigate('course-details', ${c.id})" class="text-xs md:text-sm font-bold text-secondary hover:underline">Details →</button>
           </div>
         </div>
       `).join('');
     }
 
-    // Card Generation Factory Markup helper
     function generateCourseCardMarkup(course) {
       return `
         <div class="card bg-base-100 shadow-md border border-base-200 hover:scale-[1.01] transition-all duration-300">
-          <figure class="h-44 overflow-hidden relative">
+          <figure class="h-40 md:h-44 overflow-hidden relative">
             <img src="${course.image}" alt="${course.title}" class="w-full h-full object-cover" />
-            <span class="absolute top-2 right-2 badge badge-neutral text-xs text-white">${course.level}</span>
+            <span class="absolute top-2 right-2 badge badge-neutral text-[10px] text-white">${course.level}</span>
           </figure>
-          <div class="card-body p-5 justify-between">
+          <div class="card-body p-4 md:p-5 justify-between">
             <div class="space-y-1">
-              <h3 class="card-title text-base font-bold line-clamp-2 leading-snug h-12">${course.title}</h3>
+              <h3 class="card-title text-sm md:text-base font-bold line-clamp-2 leading-snug h-10 md:h-12">${course.title}</h3>
               <p class="text-xs opacity-70">Instructor: <span class="font-medium">${course.instructor}</span></p>
-              <div class="flex items-center gap-1 text-xs pt-1">
-                <span class="text-warning">⭐</span>
-                <span class="font-bold">${course.rating}</span>
-                <span class="opacity-50">(${course.duration})</span>
+              <div class="flex items-center gap-1 text-[11px] pt-1">
+                <span class="text-warning">⭐</span><span class="font-bold">${course.rating}</span><span class="opacity-50">(${course.duration})</span>
               </div>
             </div>
             <div class="card-actions justify-end mt-4">
-              <button onclick="navigate('course-details', ${course.id})" class="btn btn-primary btn-sm btn-block text-white">View Details</button>
+              <button onclick="navigate('course-details', ${course.id})" class="btn btn-primary btn-xs sm:btn-sm btn-block text-white">View Details</button>
             </div>
           </div>
         </div>
       `;
     }
 
-    // Renderer Module: All Courses (Search Implementation)
     function renderCoursesView() {
       executeCourseSearch();
     }
@@ -559,62 +591,50 @@
       const grid = document.getElementById('all-courses-grid');
 
       if(filtered.length === 0) {
-        grid.className = "block w-full text-center py-16 bg-base-200 rounded-2xl border border-dashed border-base-300";
-        grid.innerHTML = `<p class="font-medium opacity-60">No pipelines matches standard criteria parameters.</p>`;
+        grid.className = "block w-full text-center py-12 bg-base-200 rounded-2xl border border-dashed border-base-300";
+        grid.innerHTML = `<p class="text-xs md:text-sm font-medium opacity-60">No matching system architectures located.</p>`;
       } else {
-        grid.className = "grid grid-cols-1 md:grid-cols-3 gap-8";
+        grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:grid-cols-3 md:gap-8";
         grid.innerHTML = filtered.map(c => generateCourseCardMarkup(c)).join('');
       }
     }
 
-    // Renderer Module: Details Blueprint View Template (Protected)
     function renderCourseDetailsView(id) {
       const course = coursesDatabase.find(c => c.id === Number(id));
       const target = document.getElementById('view-course-details');
-      
-      if(!course) {
-        target.innerHTML = `<div class="text-center py-12"><h2 class="text-xl font-bold">Metadata missing.</h2></div>`;
-        return;
-      }
+      if(!course) return;
 
       target.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="md:col-span-2 space-y-6">
-            <div class="badge badge-primary text-white font-mono">${course.category}</div>
-            <h1 class="text-3xl md:text-5xl font-black tracking-tight">${course.title}</h1>
-            <p class="text-base opacity-80 leading-relaxed">${course.description}</p>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+          <div class="lg:col-span-2 space-y-4 md:space-y-6">
+            <div class="badge badge-primary text-white text-xs font-mono">${course.category}</div>
+            <h1 class="text-2xl md:text-4xl font-black tracking-tight leading-tight">${course.title}</h1>
+            <p class="text-sm md:text-base opacity-80 leading-relaxed">${course.description}</p>
             
-            <div class="bg-base-200 p-6 rounded-2xl border border-base-300">
-              <h3 class="font-bold text-lg mb-4">📚 Static Blueprint Curriculum List</h3>
-              <ul class="steps steps-vertical w-full text-sm">
-                <li class="step step-primary justify-start text-left pl-4 pb-4">
-                  <strong>Module 01: Environmental Core Initialization</strong>
-                </li>
-                <li class="step step-primary justify-start text-left pl-4 pb-4">
-                  <strong>Module 02: Structural Logic Implementations</strong>
-                </li>
-                <li class="step justify-start text-left pl-4">
-                  <strong>Module 03: Production Distribution Scaling Matrix</strong>
-                </li>
+            <div class="bg-base-200 p-4 md:p-6 rounded-2xl border border-base-300">
+              <h3 class="font-bold text-base md:text-lg mb-3">📚 Dynamic Static Curriculum Spec</h3>
+              <ul class="steps steps-vertical w-full text-xs md:text-sm">
+                <li class="step step-primary justify-start text-left pl-3 pb-3"><strong>Module 01: Core Initialization</strong></li>
+                <li class="step step-primary justify-start text-left pl-3 pb-3"><strong>Module 02: Pipeline Logic Implementations</strong></li>
+                <li class="step justify-start text-left pl-3"><strong>Module 03: Scale Matrix Optimization</strong></li>
               </ul>
             </div>
           </div>
           
-          <div class="card bg-base-100 border border-base-200 shadow-lg h-fit">
-            <figure><img src="${course.image}" alt="" class="w-full object-cover" /></figure>
-            <div class="card-body p-5 space-y-2 text-sm">
-              <div class="flex justify-between border-b pb-1"><span class="opacity-60">Lead</span><span class="font-bold">${course.instructor}</span></div>
-              <div class="flex justify-between border-b pb-1"><span class="opacity-60">Duration</span><span class="font-bold">${course.duration}</span></div>
+          <div class="card bg-base-100 border border-base-200 shadow-md h-fit w-full max-w-md lg:max-w-none mx-auto">
+            <figure class="h-48 overflow-hidden"><img src="${course.image}" alt="" class="w-full h-full object-cover" /></figure>
+            <div class="card-body p-4 md:p-5 space-y-2 text-xs">
+              <div class="flex justify-between border-b pb-1"><span class="opacity-60">Instructor</span><span class="font-bold">${course.instructor}</span></div>
+              <div class="flex justify-between border-b pb-1"><span class="opacity-60">Runtime Limits</span><span class="font-bold">${course.duration}</span></div>
               <div class="flex justify-between border-b pb-1"><span class="opacity-60">Cohort Target</span><span class="font-bold">${course.level}</span></div>
-              <div class="flex justify-between"><span class="opacity-60">Rating Matrix</span><span class="font-bold text-warning">⭐ ${course.rating}</span></div>
-              <button onclick="showToast('Blueprint registration path active.')" class="btn btn-primary text-white btn-block mt-4">Initialize Track Pipeline</button>
+              <div class="flex justify-between"><span class="opacity-60">Audit Score</span><span class="font-bold text-warning">⭐ ${course.rating}</span></div>
+              <button onclick="showToast('Blueprint registration path active.')" class="btn btn-primary btn-sm md:btn-md text-white btn-block mt-4">Initialize Track Pipeline</button>
             </div>
           </div>
         </div>
       `;
     }
 
-    // Renderer Module: Profile Verification Views
     function renderProfileView() {
       if(!currentUser) return;
       document.getElementById('profile-card-img').src = currentUser.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200';
@@ -628,12 +648,11 @@
       document.getElementById('update-image').value = currentUser.image || '';
     }
 
-    // Identity Access Management Execution Triggers
+    // Form Event & Session Actions Handlers
     function handleEmailLogin(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-password').value;
-      
       const savedUser = JSON.parse(localStorage.getItem(`ss_reg_${email}`));
 
       if(savedUser && savedUser.password === pass) {
@@ -653,20 +672,13 @@
       const image = document.getElementById('reg-photo').value;
       const password = document.getElementById('reg-password').value;
 
-      const userObject = { name, email, image, password };
-      localStorage.setItem(`ss_reg_${email}`, JSON.stringify(userObject));
-      
+      localStorage.setItem(`ss_reg_${email}`, JSON.stringify({ name, email, image, password }));
       showToast("Account entry deployed successfully.");
       navigate('login');
     }
 
     function handleSocialLogin() {
-      // Simulated Google OAuth Runtime Endpoint return
-      currentUser = {
-        name: "Google Verified Instance",
-        email: "oauth.user@gmail.com",
-        image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100"
-      };
+      currentUser = { name: "OAuth Global Instance", email: "oauth.user@gmail.com", image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100" };
       localStorage.setItem('ss_user', JSON.stringify(currentUser));
       showToast("Google OAuth identity approved.");
       executePostAuthRedirect();
@@ -679,16 +691,14 @@
       navigate('home');
     }
 
-    // Challenge 3: Profile Parameter Update Handler conforming to better-auth concepts
     function handleProfileUpdate(e) {
       e.preventDefault();
       if(!currentUser) return;
 
       currentUser.name = document.getElementById('update-name').value;
       currentUser.image = document.getElementById('update-image').value;
-      
       localStorage.setItem('ss_user', JSON.stringify(currentUser));
-      // Save sync update to registry database item context
+
       const fullRegistry = JSON.parse(localStorage.getItem(`ss_reg_${currentUser.email}`));
       if(fullRegistry) {
         fullRegistry.name = currentUser.name;
@@ -696,11 +706,10 @@
         localStorage.setItem(`ss_reg_${currentUser.email}`, JSON.stringify(fullRegistry));
       }
 
-      showToast("User schema record sets committed successfully.");
+      showToast("User schema record sets committed.");
       navigate('profile');
     }
 
-    // Redirection engine post-authentication validation check
     function executePostAuthRedirect() {
       if (currentRedirectTarget) {
         const target = currentRedirectTarget;
@@ -711,7 +720,7 @@
       }
     }
 
-    // Initialize Global Process Loop Runtime
+    // Run Engine Initial Setup
     navigate('home');
   </script>
 </body>
