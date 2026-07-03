@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Complete Web Development Bootcamp",
+    "instructor": "John Doe",
+    "duration": "20 hours",
+    "rating": 4.9,
+    "level": "Beginner",
+    "description": "Learn full-stack web development from scratch.",
+    "image": "https://images.unsplash.com/photo-1516116211223-5c359a36298a?w=500",
+    "category": "Development",
+    "trending": true
+  },
+  {
+    "id": 2,
+    "title": "Advanced React & Next.js Masterclass",
+    "instructor": "Jane Smith",
+    "duration": "15 hours",
+    "rating": 4.8,
+    "level": "Advanced",
+    "description": "Master Server Actions, App Router, and state management.",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500",
+    "category": "Development",
+    "trending": true
+  },
+  {
+    "id": 3,
+    "title": "UI/UX Design Essentials",
+    "instructor": "Sarah Connor",
+    "duration": "12 hours",
+    "rating": 4.7,
+    "level": "Beginner",
+    "description": "Figma design principles, wireframing, and high-fidelity prototyping.",
+    "image": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=500",
+    "category": "Design",
+    "trending": true
+  },
+  {
+    "id": 4,
+    "title": "Python for Data Science",
+    "instructor": "David Miller",
+    "duration": "25 hours",
+    "rating": 4.6,
+    "level": "Intermediate",
+    "description": "Pandas, NumPy, and Matplotlib fundamentals for data analysis.",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500",
+    "category": "Data Science",
+    "trending": false
+  },
+  {
+    "id": 5,
+    "title": "Cybersecurity Fundamentals",
+    "instructor": "Alex Mercer",
+    "duration": "18 hours",
+    "rating": 4.5,
+    "level": "Beginner",
+    "description": "Protect networks and data endpoints from modern cyber threats.",
+    "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500",
+    "category": "Cybersecurity",
+    "trending": false
+  },
+  {
+    "id": 6,
+    "title": "Product Management Blueprint",
+    "instructor": "Elena Rostova",
+    "duration": "10 hours",
+    "rating": 4.4,
+    "level": "Intermediate",
+    "description": "Learn to scale software products from concept to launch.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500",
+    "category": "Business",
+    "trending": false
+  }
+]
