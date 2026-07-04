@@ -1,64 +1,68 @@
+
+export default function Loading() {
+  return (
+    <div className="min-h-[70vh] flex flex-col justify-center items-center gap-4">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+      <p className="text-sm font-medium tracking-wide text-neutral-500">Fetching Data... Please wait.</p>
+    </div>
+  );
+}
+// src/app/login/page.tsx
+"use client";
 import React, { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useRouter, useSearchParams } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-hot-toast";
 
-export default function Login({ setUser }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
-
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  // Check if user needs redirection back to a protected course details path
+  const redirectTo = searchParams.get("redirectTo") || "/";
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (email && password) {
-      const mockUser = {
-        name: "Alex Mercer",
-        email: email,
-        image: "https://i.pravatar.cc/150?img=33"
-      };
-      localStorage.setItem("skillsphere_user", JSON.stringify(mockUser));
-      setUser(mockUser);
-      toast.success("Welcome back!");
-      navigate(from, { replace: true });
+    setLoading(true);
+
+    const { error } = await authClient.signIn.email({ email, password });
+
+    setLoading(false);
+    if (error) {
+      toast.error(error.message || "Invalid credentials provided.");
     } else {
-      toast.error("Please fill out all credentials.");
+      toast.success("Logged in successfully!");
+      router.push(redirectTo);
+      router.refresh();
     }
   };
 
-  const handleGoogleLogin = () => {
-    const googleUser = {
-      name: "Google Student",
-      email: "googleuser@gmail.com",
-      image: "https://i.pravatar.cc/150?img=12"
-    };
-    localStorage.setItem("skillsphere_user", JSON.stringify(googleUser));
-    setUser(googleUser);
-    toast.success("Google Sign-In Successful!");
-    navigate("/", { replace: true });
-  };
-
   return (
-    <div className="max-w-md mx-auto my-12 p-6 border rounded-xl shadow bg-base-100">
-      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div className="form-control">
-          <label className="label"><span className="label-text">Email</span></label>
-          <input type="email" className="input input-bordered" value={email} onChange={e => setEmail(e.target.value)} required />
-        </div>
-        <div className="form-control">
-          <label className="label"><span className="label-text">Password</span></label>
-          <input type="password" className="input input-bordered" value={password} onChange={e => setPassword(e.target.value)} required />
-        </div>
-        <button type="submit" className="btn btn-primary w-full">Login</button>
-      </form>
-      <div className="divider">OR</div>
-      <button onClick={handleGoogleLogin} className="btn btn-outline btn-block">Continue with Google</button>
-      <p className="text-sm text-center mt-4">
-        Need an account? <Link to="/register" className="text-primary link">Register here</Link>
-      </p>
+    <div class="flex min-h-[80vh] items-center justify-center p-4">
+      <div class="card w-full max-w-md border bg-base-100 p-8 shadow-xl">
+        <h2 class="text-center text-3xl font-bold text-primary">Login</h2>
+        <form onSubmit={handleLogin} class="mt-6 space-y-4">
+          <div class="form-control">
+            <label class="label"><span class="label-text font-medium">Email</span></label>
+            <input type="email" required class="input input-bordered" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+          </div>
+          <div class="form-control">
+            <label class="label"><span class="label-text font-medium">Password</span></label>
+            <input type="password" required class="input input-bordered" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} />
+          </div>
+          <button type="submit" disabled={loading} class="btn btn-primary w-full mt-4">
+            {loading ? <span class="loading loading-spinner"></span> : "Login"}
+          </button>
+        </form>
+        <div class="divider">OR</div>
+        <button onClick={() => authClient.signIn.social({ provider: "google", callbackURL: redirectTo })} class="btn btn-outline btn-secondary w-full">
+          Sign In with Google
+        </button>
+        <p class="text-center text-sm mt-4 text-base-content/70">New to the platform? <a href="/register" class="link link-primary font-semibold">Register here</a></p>
+      </div>
     </div>
   );
 }
